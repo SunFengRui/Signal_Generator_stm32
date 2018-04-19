@@ -1,0 +1,9 @@
+..\obj\dns_1.o: ..\HARDWARE\Internet\DNS\dns.c
+..\obj\dns_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\dns_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\obj\dns_1.o: ..\HARDWARE\ETHERNET\socket.h
+..\obj\dns_1.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
+..\obj\dns_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\dns_1.o: ..\HARDWARE\ETHERNET\W5500/w5500.h
+..\obj\dns_1.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
+..\obj\dns_1.o: ..\HARDWARE\Internet\DNS\dns.h
