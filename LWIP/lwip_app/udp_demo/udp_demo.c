@@ -2,47 +2,21 @@
 #include "delay.h"
 #include "usart.h"
 #include "led.h"
-#include "key.h"
 #include "malloc.h"
 #include "stdio.h"
 #include "string.h"  
 #include <stdio.h>
 #include <stdlib.h>
-#include "spi.h"
-#include "socket.h"	
-
+#include "processw5300.h"
 
 /*
               IP                    PORT
-Matlab      Matlab_IP           Matlab_PORT
-STM32      192.168.1.10    W5500_PORT(W5500)  L8720_PORT(L8720)
+Matlab      Matlab_IP  108           Matlab_PORT
+STM32      192.168.1.10    W5300_PORT(W5300)  L8720_PORT(L8720)
 XiaWeiJi   192.168.1.16        XiaWeiJi_PORT
 */
-uint16_t Matlab_PORT=1401;	//¶¨ÒåudpÁ¬½ÓµÄÔ¶¶Ë¶Ë¿Ú ºÜÖØÒª¡£¡£¡£¡£¡£¡£
+uint16_t Matlab_PORT=1401;	//¶¨ÒåudpÁ¬½ÓµÄÔ¶¶Ë¶Ë¿Ú ºÜÖØÒª¡£¡£¡£¡£¡£¡£  matlab·¢ËÍĞÅºÅ¶Ë¿Ú
 uint8_t Matlab_IP[]={192,168,1,108};  //ÉèÖÃÉÏÎ»»úÔ¶¶ËIPµØÖ·  ºÜÖØÒª¡£¡£¡£¡£¡£¡£¡£¡£¡£
-extern uint8_t T_XiaWeiJi_A[150][13];
-extern uint8_t T_XiaWeiJi_B[150][13];
-extern int T_COUNT;
-void udp_set_XiaWeiji_remoteip(void)  //ÉèÖÃÏÂÎ»»úÔ¶¶ËIPµØÖ·  ºÜÖØÒª¡£¡£¡£¡£¡£¡£¡£¡£¡£
-{
-	u8 *tbuf;
-	tbuf=mymalloc(SRAMIN,100);	//ÉêÇëÄÚ´æ
-	if(tbuf==NULL)return; 	
-  lwipdev.remoteip[0]=192;
-  lwipdev.remoteip[1]=168;
-  lwipdev.remoteip[2]=1;
-	lwipdev.remoteip[3]=16;  //×Ô¼ºÉèÖÃÔ¶¶ËIP
-	myfree(SRAMIN,tbuf); 
-}
-
-//W5500ÍøÂçÉèÖÃ
-wiz_NetInfo gWIZNETINFO = { .mac = {0x00, 0x08, 0xdc,0x00, 0xab, 0xcd},
-                            .ip = {192, 168, 1, 10},      //¡£¡£¡£¡£¡£¡£¡£¡£
-                            .sn = {255,255,255,0},
-                            .gw = {192, 168, 1, 1},
-                            .dns = {0,0,0,0},
-                            .dhcp = NETINFO_STATIC };  //Ê¹ÓÃ¾²Ì¬IP
-char udp_matlab_recvbuf[UDP_DEMO_RX_BUFSIZE];	//Matlab½ÓÊÕÊı¾İ»º³å ½ÓÊÕµ½ºóÒª¶ÔÊı¾İ½øĞĞ´¦Àí
 
 //UDP ²âÊÔÈ«¾Ö×´Ì¬±ê¼Ç±äÁ¿
 //bit6:0,Ã»ÓĞÊÕµ½Êı¾İ;1,ÊÕµ½Êı¾İÁË.
@@ -50,25 +24,18 @@ char udp_matlab_recvbuf[UDP_DEMO_RX_BUFSIZE];	//Matlab½ÓÊÕÊı¾İ»º³å ½ÓÊÕµ½ºóÒª¶ÔÊ
 u8 udp_xiaweiji_flag;
 
 
-
 //ÏÂÎ»»úUDP²âÊÔ
-int XiaWeiJi_Flag;
 struct udp_pcb *udp_XiaWeiJi_pcb;  	//¶¨ÒåÒ»¸öUDP·şÎñÆ÷¿ØÖÆ¿é
 void udp_XiaWeiJi_test(void)
 {
  	err_t err;
 	struct ip_addr rmtipaddr;  	//Ô¶¶ËipµØÖ· 	
-	u8 *tbuf;
-	u8 res=0;		 	
-	udp_set_XiaWeiji_remoteip();//ÏÈÉèÖÃÔ¶¶ËIP
-	tbuf=mymalloc(SRAMIN,200);	//ÉêÇëÄÚ´æ
-	if(tbuf==NULL)
-		return;		//ÄÚ´æÉêÇëÊ§°ÜÁË,Ö±½ÓÍË³ö
+
 	udp_XiaWeiJi_pcb=udp_new();
 	if(udp_XiaWeiJi_pcb)//´´½¨³É¹¦
 	{ 
 		IP4_ADDR(&rmtipaddr,lwipdev.remoteip[0],lwipdev.remoteip[1],lwipdev.remoteip[2],lwipdev.remoteip[3]);  //½«Ô¶¶ËIP´ò°ü³É32Î»
-		err=udp_connect(udp_XiaWeiJi_pcb,&rmtipaddr,XiaWeiJi_PORT);//UDP¿Í»§¶ËÁ¬½Óµ½Ö¸¶¨IPµØÖ·ºÍ¶Ë¿ÚºÅµÄ·şÎñÆ÷  ÉèÖÃÔ¶¶ËIPºÍ¶Ë¿Ú
+		err=udp_connect(udp_XiaWeiJi_pcb,&rmtipaddr,Matlab_PORT);//UDP¿Í»§¶ËÁ¬½Óµ½Ö¸¶¨IPµØÖ·ºÍ¶Ë¿ÚºÅµÄ·şÎñÆ÷  ÉèÖÃÔ¶¶ËIPºÍ¶Ë¿Ú
 		if(err==ERR_OK)
 		{
 			err=udp_bind(udp_XiaWeiJi_pcb,IP_ADDR_ANY,L8720_PORT);//°ó¶¨±¾µØIPµØÖ·Óë¶Ë¿ÚºÅ
@@ -76,81 +43,134 @@ void udp_XiaWeiJi_test(void)
 			{
 				udp_recv(udp_XiaWeiJi_pcb,udp_XiaWeiJi_recv,NULL);//×¢²á½ÓÊÕ»Øµ÷º¯ÊıÎª udp_XiaWeiJi_recv()
 				udp_xiaweiji_flag |= 1<<5;			//±ê¼ÇÒÑ¾­Á¬½ÓÉÏÁË
-			}else res=1;
-		}else res=1;		
-	}else res=1;
-	if(res==0)    //   res==0Ç°Ãæ¶¼³É¹¦ÁË
-   XiaWeiJi_Flag=1;
-  else	
-	XiaWeiJi_Flag=0;
-		
-	
-//	udp_XiaWeiJi_connection_close(udp_XiaWeiJi_pcb);  //¶Ï¿ªÁ¬½Ó
-//	myfree(SRAMIN,tbuf);
+			}
+		}		
+	}
 } 
+extern int A_Remain,B_Remain,C_Remain,D_Remain;
+extern int A2_Remain,B2_Remain,C2_Remain,D2_Remain;
+extern uint8_t T_XiaWeiJi_A[daqu_size];
+extern uint8_t T_XiaWeiJi_B[daqu_size];
+extern uint8_t T_XiaWeiJi_C[daqu_size];
+extern uint8_t T_XiaWeiJi_D[daqu_size];
 
-//Matlab_UDP½ÓÊÕÊı¾İ»Øµ÷º¯Êı
+
+extern uint8_t T_XiaWeiJi_A2[daqu_size];
+extern uint8_t T_XiaWeiJi_B2[daqu_size];
+extern uint8_t T_XiaWeiJi_C2[daqu_size];
+extern uint8_t T_XiaWeiJi_D2[daqu_size];
+
+
+extern u8 traning1,traning2;
+int receive_length;
+u32 data_len = 0;
+u8 receivefault;
 void udp_XiaWeiJi_recv(void *arg,struct udp_pcb *upcb,struct pbuf *p,struct ip_addr *addr,u16_t port)
 {
-	u32 data_len = 0;
-	struct pbuf *q;
-	if(p!=NULL)	//½ÓÊÕµ½²»Îª¿ÕµÄÊı¾İÊ±
+struct pbuf *q;
+    LED1=0;
+	switch(traning1%4)
 	{
-		memset(udp_matlab_recvbuf,0,UDP_DEMO_RX_BUFSIZE);  //Êı¾İ½ÓÊÕ»º³åÇøÇåÁã
-		for(q=p;q!=NULL;q=q->next)  //±éÀúÍêÕû¸öpbufÁ´±í
-		{
-			//ÅĞ¶ÏÒª¿½±´µ½UDP_DEMO_RX_BUFSIZEÖĞµÄÊı¾İÊÇ·ñ´óÓÚUDP_DEMO_RX_BUFSIZEµÄÊ£Óà¿Õ¼ä£¬Èç¹û´óÓÚ
-			//µÄ»°¾ÍÖ»¿½±´UDP_DEMO_RX_BUFSIZEÖĞÊ£Óà³¤¶ÈµÄÊı¾İ£¬·ñÔòµÄ»°¾Í¿½±´ËùÓĞµÄÊı¾İ
-			if(q->len > (UDP_DEMO_RX_BUFSIZE-data_len)) 
-				memcpy(udp_matlab_recvbuf+data_len,q->payload,(UDP_DEMO_RX_BUFSIZE-data_len));//¿½±´Êı¾İ
-			else 
-				memcpy(udp_matlab_recvbuf+data_len,q->payload,q->len);
-			data_len += q->len;  	
-			if(data_len > UDP_DEMO_RX_BUFSIZE) break; //³¬³öTCP¿Í»§¶Ë½ÓÊÕÊı×é,Ìø³ö	
-		}
-		upcb->remote_ip=*addr; 				//¼ÇÂ¼Ô¶³ÌÖ÷»úµÄIPµØÖ·
-		upcb->remote_port=port;  			//¼ÇÂ¼Ô¶³ÌÖ÷»úµÄ¶Ë¿ÚºÅ
-		lwipdev.remoteip[0]=upcb->remote_ip.addr&0xff; 		//IADDR4
-		lwipdev.remoteip[1]=(upcb->remote_ip.addr>>8)&0xff; //IADDR3
-		lwipdev.remoteip[2]=(upcb->remote_ip.addr>>16)&0xff;//IADDR2
-		lwipdev.remoteip[3]=(upcb->remote_ip.addr>>24)&0xff;//IADDR1 
-		udp_xiaweiji_flag|=1<<6;	//±ê¼Ç½ÓÊÕµ½Êı¾İÁË
+		case 0:
+				 for(q=p;q!=NULL;q=q->next)  //±éÀúÍêÕû¸öpbufÁ´±í
+				 {	
+						memcpy(T_XiaWeiJi_A+data_len,q->payload,q->len);
+						data_len += q->len;  		
+				 }
+					receive_length=data_len;
+					if(receive_length==Receive_Sum_Count)
+					{
+					 A_Remain+=daqu_dataPacket_size;
+					 B_Remain+=daqu_dataPacket_size;
+					
+						data_len=0;
+						traning2=0;
+						receive_length=0;
+						receivefault=0;
+					}
+					else
+						receivefault=1;
+		break;
+		case 1:
+				for(q=p;q!=NULL;q=q->next)  //±éÀúÍêÕû¸öpbufÁ´±í
+					{				
+							memcpy(T_XiaWeiJi_C+data_len,q->payload,q->len);
+							data_len += q->len;  							
+						}
+			 receive_length=data_len;
+				
+					if(receive_length==Receive_Sum_Count)
+					{ 
+					  C_Remain+=daqu_dataPacket_size;
+					 D_Remain+=daqu_dataPacket_size;
+					 data_len=0;
+						traning2=0; 
+						receive_length=0;
+						receivefault=0;
+					}
+					else
+						receivefault=1;
+		break;
+		case 2:
+				 for(q=p;q!=NULL;q=q->next)  //±éÀúÍêÕû¸öpbufÁ´±í
+						{				
+								memcpy(T_XiaWeiJi_A2+data_len,q->payload,q->len);
+								data_len += q->len;  		
+							}
+						 receive_length=data_len;
+							
+								if(receive_length==Receive_Sum_Count)
+								{
+								 A2_Remain+=daqu_dataPacket_size;
+								 B2_Remain+=daqu_dataPacket_size;
+								
+								 data_len=0;
+									traning2=0; 
+									receive_length=0;
+									receivefault=0;
+								}
+								else
+						receivefault=1;
+		break;
+		case 3:
+				 for(q=p;q!=NULL;q=q->next)  //±éÀúÍêÕû¸öpbufÁ´±í
+					{				
+							memcpy(T_XiaWeiJi_C2+data_len,q->payload,q->len);
+							data_len += q->len;  				
+						}
+					 receive_length=data_len;	
+							if(receive_length==Receive_Sum_Count)
+							{
+							C2_Remain+=daqu_dataPacket_size;
+							D2_Remain+=daqu_dataPacket_size;
+							data_len=0;
+							traning2=0; 
+							receive_length=0;
+							receivefault=0;
+							}
+							else
+						receivefault=1;
+		break;
+		default:
+		break;
+	}
 		pbuf_free(p);//ÊÍ·ÅÄÚ´æ
-	}else
-	{
-		udp_disconnect(upcb); 
-		udp_xiaweiji_flag &= ~(1<<5);	//±ê¼ÇÁ¬½Ó¶Ï¿ª
-	} 
 } 
-extern int A_Remain,B_Remain;
-extern int Tranmit_Flag;
-int Tranmit_Count=0;
-//ÏòÏÂÎ»»ú25us·¢ËÍÊı¾İ   ÖĞ¶ÏÀïÃæÖ´ĞĞ
+
+extern uint8_t T_DATABUF[];
 void udp_XiaWeiJi_senddata(struct udp_pcb *upcb)     
 {  
 	struct pbuf *ptr;
-	ptr=pbuf_alloc(PBUF_TRANSPORT,13,PBUF_POOL); //ÉêÇëÄÚ´æ  //µ¥Î»Îª×Ö½Ú
+	ptr=pbuf_alloc(PBUF_TRANSPORT,1,PBUF_POOL); //ÉêÇëÄÚ´æ  //µ¥Î»Îª×Ö½Ú
 	if(ptr)
-	{ T_COUNT=Tranmit_Count%150;
-		if(Tranmit_Count%150==0)
-		{
-			Tranmit_Flag=!Tranmit_Flag;
-		}
-		if(Tranmit_Flag)
-		{
-		ptr->payload=(void*)T_XiaWeiJi_B[T_COUNT]; //½«tcp_matlab_sendbufÖĞµÄÊı¾İ´ò°ü½øpbuf½á¹¹ÖĞ
-		B_Remain--;
-		}
-		else
-		{
-		ptr->payload=(void*)T_XiaWeiJi_A[T_COUNT]; //½«tcp_matlab_sendbufÖĞµÄÊı¾İ´ò°ü½øpbuf½á¹¹ÖĞ
-		A_Remain--;
-		}
-		Tranmit_Count++;
+	{	
+		ptr->payload=(void*)(T_DATABUF); //½«tcp_matlab_sendbufÖĞµÄÊı¾İ´ò°ü½øpbuf½á¹¹ÖĞ
 		udp_send(upcb,ptr);	//udp·¢ËÍÊı¾İ 
+
 		pbuf_free(ptr);//ÊÍ·ÅÄÚ´æ
 	} 
-} 
+}
+
 //¹Ø±ÕMatlab_UDPÁ¬½Ó
 void udp_XiaWeiJi_connection_close(struct udp_pcb *upcb)
 {
@@ -159,15 +179,7 @@ void udp_XiaWeiJi_connection_close(struct udp_pcb *upcb)
 	udp_xiaweiji_flag &= ~(1<<5);	//±ê¼ÇÁ¬½Ó¶Ï¿ª	
 }
 
-//W5500
-void network_init(void)
-{
-  uint8_t tmpstr[6];
-	ctlnetwork(CN_SET_NETINFO, (void*)&gWIZNETINFO);
-	ctlnetwork(CN_GET_NETINFO, (void*)&gWIZNETINFO);
-	// Display Network Information
-	ctlwizchip(CW_GET_ID,(void*)tmpstr);
-}
+
 
 
 

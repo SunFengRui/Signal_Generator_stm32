@@ -5,5 +5,5 @@
 ..\obj\stats.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\stats.o: ..\LWIP\arch/cc.h
 ..\obj\stats.o: ..\LWIP\arch/cpu.h
-..\obj\stats.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\stats.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\stats.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h

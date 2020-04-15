@@ -1,6 +1,8 @@
 #ifndef _LED_H
 #define _LED_H
 #include "sys.h"
+#include "stm32f4xx_gpio.h"
+#include "stm32f4xx_rcc.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32F407开发板
@@ -18,7 +20,8 @@
 #define BEEP PFout(8)
 #define LED0 PFout(9)
 #define LED1 PFout(10)
-#define ABC PFout(1)
+#define TEST_IO PEout(0)
+
 void LED_Init(void); //初始化
 void Set_Led(u8 LED,u8 state);
 #endif

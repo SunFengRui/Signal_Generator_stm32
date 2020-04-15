@@ -4,7 +4,7 @@
 ..\obj\lwip_comm.o: ..\SYSTEM\sys\sys.h
 ..\obj\lwip_comm.o: ..\USER\stm32f4xx.h
 ..\obj\lwip_comm.o: ..\CORE\core_cm4.h
-..\obj\lwip_comm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\lwip_comm.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\lwip_comm.o: ..\CORE\core_cmInstr.h
 ..\obj\lwip_comm.o: ..\CORE\core_cmFunc.h
 ..\obj\lwip_comm.o: ..\CORE\core_cm4_simd.h
@@ -46,7 +46,7 @@
 ..\obj\lwip_comm.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\lwip_comm.o: ..\LWIP\arch/cc.h
 ..\obj\lwip_comm.o: ..\LWIP\arch/cpu.h
-..\obj\lwip_comm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\lwip_comm.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\lwip_comm.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\lwip_comm.o: ..\LWIP\lwip-1.4.1\src\include\lwip/pbuf.h
 ..\obj\lwip_comm.o: ..\LWIP\lwip-1.4.1\src\include\lwip/err.h

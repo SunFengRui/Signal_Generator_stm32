@@ -64,7 +64,7 @@ void lwip_comm_default_ip_set(__lwip_dev *lwipx)
 	lwipx->remoteip[0]=192;	
 	lwipx->remoteip[1]=168;
 	lwipx->remoteip[2]=1;
-	lwipx->remoteip[3]=101;
+	lwipx->remoteip[3]=108;
 	//MAC地址设置(高三字节固定为:2.0.0,低三字节用STM32唯一ID)
 	lwipx->mac[0]=2;//高三字节(IEEE称之为组织唯一ID,OUI)地址固定为:2.0.0
 	lwipx->mac[1]=0;
@@ -133,14 +133,6 @@ void lwip_pkt_handle(void)
 //LWIP轮询任务
 void lwip_periodic_handle()
 {
-#if LWIP_TCP
-	//每250ms调用一次tcp_tmr()函数
-  if (lwip_localtime - TCPTimer >= TCP_TMR_INTERVAL)
-  {
-    TCPTimer =  lwip_localtime;
-    tcp_tmr();
-  }
-#endif
   //ARP每5s周期性调用一次
   if ((lwip_localtime - ARPTimer) >= ARP_TMR_INTERVAL)
   {
@@ -148,25 +140,6 @@ void lwip_periodic_handle()
     etharp_tmr();
   }
 
-//#if LWIP_DHCP //如果使用DHCP的话
-//  //每500ms调用一次dhcp_fine_tmr()
-//  if (lwip_localtime - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS)
-//  {
-//    DHCPfineTimer =  lwip_localtime;
-//    dhcp_fine_tmr();
-//    if ((lwipdev.dhcpstatus != 2)&&(lwipdev.dhcpstatus != 0XFF))
-//    { 
-//      lwip_dhcp_process_handle();  //DHCP处理
-//    }
-//  }
-
-//  //每60s执行一次DHCP粗糙处理
-//  if (lwip_localtime - DHCPcoarseTimer >= DHCP_COARSE_TIMER_MSECS)
-//  {
-//    DHCPcoarseTimer =  lwip_localtime;
-//    dhcp_coarse_tmr();
-//  }  
-//#endif
 }
 
 

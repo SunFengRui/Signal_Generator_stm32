@@ -5,7 +5,7 @@
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\raw.o: ..\LWIP\arch/cc.h
 ..\obj\raw.o: ..\LWIP\arch/cpu.h
-..\obj\raw.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\raw.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/def.h
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/memp.h
@@ -19,4 +19,4 @@
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/stats.h
 ..\obj\raw.o: ..\LWIP\lwip-1.4.1\src\include\lwip/mem.h
 ..\obj\raw.o: ..\LWIP\arch/perf.h
-..\obj\raw.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\raw.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

@@ -81,7 +81,7 @@
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 
-#include "wizchip_conf.h"
+#include "udp_demo.h" 
 
 #define SOCKET                uint8_t  ///< SOCKET type define for legacy driver
 

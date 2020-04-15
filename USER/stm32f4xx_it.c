@@ -139,9 +139,10 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
+int nus;
 void SysTick_Handler(void)
 {
- 
+ nus++;
 }
 
 /******************************************************************************/

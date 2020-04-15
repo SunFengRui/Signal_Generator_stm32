@@ -5,7 +5,7 @@
 ..\obj\timers.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\timers.o: ..\LWIP\arch/cc.h
 ..\obj\timers.o: ..\LWIP\arch/cpu.h
-..\obj\timers.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\timers.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\timers.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\timers.o: ..\LWIP\lwip-1.4.1\src\include\lwip/timers.h
 ..\obj\timers.o: ..\LWIP\lwip-1.4.1\src\include\lwip/err.h

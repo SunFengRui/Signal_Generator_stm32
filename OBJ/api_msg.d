@@ -5,5 +5,5 @@
 ..\obj\api_msg.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\api_msg.o: ..\LWIP\arch/cc.h
 ..\obj\api_msg.o: ..\LWIP\arch/cpu.h
-..\obj\api_msg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\api_msg.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\api_msg.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h

@@ -33,10 +33,10 @@
 
 /* ---------- Pbuf选项---------- */
 //PBUF_POOL_SIZE:pbuf内存池个数. 
-#define PBUF_POOL_SIZE          20
+#define PBUF_POOL_SIZE          16
 
 //PBUF_POOL_BUFSIZE:每个pbuf内存池大小. 
-#define PBUF_POOL_BUFSIZE       512
+#define PBUF_POOL_BUFSIZE       2048
 
 
 /* ---------- TCP选项---------- */

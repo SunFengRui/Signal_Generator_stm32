@@ -5,7 +5,7 @@
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\mem.o: ..\LWIP\arch/cc.h
 ..\obj\mem.o: ..\LWIP\arch/cpu.h
-..\obj\mem.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\mem.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/def.h
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/mem.h
@@ -14,4 +14,4 @@
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/memp.h
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/memp_std.h
 ..\obj\mem.o: ..\LWIP\lwip-1.4.1\src\include\lwip/err.h
-..\obj\mem.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\mem.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

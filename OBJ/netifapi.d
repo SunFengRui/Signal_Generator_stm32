@@ -5,5 +5,5 @@
 ..\obj\netifapi.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\netifapi.o: ..\LWIP\arch/cc.h
 ..\obj\netifapi.o: ..\LWIP\arch/cpu.h
-..\obj\netifapi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\netifapi.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\netifapi.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h

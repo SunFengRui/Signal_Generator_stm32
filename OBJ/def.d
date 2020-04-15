@@ -5,6 +5,6 @@
 ..\obj\def.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\def.o: ..\LWIP\arch/cc.h
 ..\obj\def.o: ..\LWIP\arch/cpu.h
-..\obj\def.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\def.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\def.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\def.o: ..\LWIP\lwip-1.4.1\src\include\lwip/def.h

@@ -5,7 +5,7 @@
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\tcp.o: ..\LWIP\arch/cc.h
 ..\obj\tcp.o: ..\LWIP\arch/cpu.h
-..\obj\tcp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\tcp.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/def.h
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/mem.h
@@ -21,4 +21,4 @@
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\ipv4\lwip/icmp.h
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/tcp_impl.h
 ..\obj\tcp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/stats.h
-..\obj\tcp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\tcp.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

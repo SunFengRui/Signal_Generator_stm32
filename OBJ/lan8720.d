@@ -3,7 +3,7 @@
 ..\obj\lan8720.o: ..\SYSTEM\sys\sys.h
 ..\obj\lan8720.o: ..\USER\stm32f4xx.h
 ..\obj\lan8720.o: ..\CORE\core_cm4.h
-..\obj\lan8720.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\lan8720.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\lan8720.o: ..\CORE\core_cmInstr.h
 ..\obj\lan8720.o: ..\CORE\core_cmFunc.h
 ..\obj\lan8720.o: ..\CORE\core_cm4_simd.h
@@ -39,6 +39,6 @@
 ..\obj\lan8720.o: ..\FWLIB\STM32F4x7_ETH_Driver\inc\stm32f4x7_eth.h
 ..\obj\lan8720.o: ..\FWLIB\STM32F4x7_ETH_Driver\inc\stm32f4x7_eth_conf.h
 ..\obj\lan8720.o: ..\SYSTEM\usart\usart.h
-..\obj\lan8720.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\lan8720.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\lan8720.o: ..\SYSTEM\delay\delay.h
 ..\obj\lan8720.o: ..\MALLOC\malloc.h

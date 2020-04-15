@@ -147,6 +147,29 @@ again:
  * @param inp network interface on which the datagram was received.
  *
  */
+//调用流程:
+//数据包首先调用ethernet_input()函数到达数据链路层，去掉以太网头部；
+//根据以太网头部类型判断：如果是ARP报文传给调用arp_input()交给ARP协议处理
+//如果是IP报文就调用ip_input()进入IP层处理
+//ip_input()函数中比较数据报文的目的IP地址，如果与某个网络接口的IP地址相同，则接收这个报文，依照IP头部的协议字段，调用各自协议的输入处理函数；
+//如果是UDP类型，调用udp_input()。
+//函数简析:
+//该函数接收来自ip层的UDP包。将所有PCB都遍历，如果有多个绑定，则给每一个进程复制一份数据报，实际调用pcb->recv()。
+//具体分析：
+//1.检测数据包有效性（小于UDP头长度的，free）；
+//2.获取UDP头，判断是否为广播包，网络字节序转换；
+//3.遍历UDP PCB链表，
+//将PCB本地addr+端口与UDP目的addr+端口进行比较（记录第一个完美匹配且未连接的PCB），
+//若完美匹配，将PCB远程addr+端口与UDP源addr+端口进行比较（第一个完美匹配的PCB移动到UDP PCB链表前端，下次发现快），
+//如果没有完美匹配，第一个完美匹配且未连接的PCB获取数据包，
+//4.如果这是匹配的，或者它是指向我们的，，做UDP校验和
+//5.判断是否是广播包/多播包（若是广播/多播包传递给所有匹配的UDP PCB链表，调用pcb->recv送上用户层），
+//若不是广播包/多播包，调用对应的UDP接收函数（调用pcb->recv送上用户层）
+//6.没有找到匹配，发送ICMP目标端口不可到达，除非目的地址是广播/多播。
+
+  u16_t Src, Dest;
+  u8_t Local_match;
+  u8_t Broadcast;
 void
 udp_input(struct pbuf *p, struct netif *inp)
 {
@@ -166,7 +189,9 @@ udp_input(struct pbuf *p, struct netif *inp)
 
   /* Check minimum length (IP header + UDP header)
    * and move payload pointer to UDP header */
-  if (p->tot_len < (IPH_HL(iphdr) * 4 + UDP_HLEN) || pbuf_header(p, -(s16_t)(IPH_HL(iphdr) * 4))) {
+	//小于udp头长度，free
+  if (p->tot_len < (IPH_HL(iphdr) * 4 + UDP_HLEN) || pbuf_header(p, -(s16_t)(IPH_HL(iphdr) * 4))) 
+		{
     /* drop short packets */
     LWIP_DEBUGF(UDP_DEBUG,
                 ("udp_input: short UDP datagram (%"U16_F" bytes) discarded\n", p->tot_len));
@@ -175,8 +200,8 @@ udp_input(struct pbuf *p, struct netif *inp)
     snmp_inc_udpinerrors();
     pbuf_free(p);
     goto end;
-  }
-
+   }
+  //获取UDP头，判断是否为广播包，网络字节序转换
   udphdr = (struct udp_hdr *)p->payload;
 
   /* is broadcast packet ? */
@@ -186,8 +211,10 @@ udp_input(struct pbuf *p, struct netif *inp)
 
   /* convert src and dest ports to host byte order */
   src = ntohs(udphdr->src);
+	 Src=src;
   dest = ntohs(udphdr->dest);
-
+	 //dest=1200;
+  Dest=dest;
   udp_debug_print(udphdr);
 
   /* print the UDP source and destination */
@@ -199,25 +226,27 @@ udp_input(struct pbuf *p, struct netif *inp)
                ip4_addr1_16(&iphdr->src), ip4_addr2_16(&iphdr->src),
                ip4_addr3_16(&iphdr->src), ip4_addr4_16(&iphdr->src), ntohs(udphdr->src)));
 
-#if LWIP_DHCP
-  pcb = NULL;
-  /* when LWIP_DHCP is active, packets to DHCP_CLIENT_PORT may only be processed by
-     the dhcp module, no other UDP pcb may use the local UDP port DHCP_CLIENT_PORT */
-  if (dest == DHCP_CLIENT_PORT) {
-    /* all packets for DHCP_CLIENT_PORT not coming from DHCP_SERVER_PORT are dropped! */
-    if (src == DHCP_SERVER_PORT) {
-      if ((inp->dhcp != NULL) && (inp->dhcp->pcb != NULL)) {
-        /* accept the packe if 
-           (- broadcast or directed to us) -> DHCP is link-layer-addressed, local ip is always ANY!
-           - inp->dhcp->pcb->remote == ANY or iphdr->src */
-        if ((ip_addr_isany(&inp->dhcp->pcb->remote_ip) ||
-           ip_addr_cmp(&(inp->dhcp->pcb->remote_ip), &current_iphdr_src))) {
-          pcb = inp->dhcp->pcb;
-        }
-      }
-    }
-  } else
-#endif /* LWIP_DHCP */
+//#if LWIP_DHCP
+//  pcb = NULL;
+//  /* when LWIP_DHCP is active, packets to DHCP_CLIENT_PORT may only be processed by
+//     the dhcp module, no other UDP pcb may use the local UDP port DHCP_CLIENT_PORT */
+//  if (dest == DHCP_CLIENT_PORT)
+//		{
+//    /* all packets for DHCP_CLIENT_PORT not coming from DHCP_SERVER_PORT are dropped! */
+//    if (src == DHCP_SERVER_PORT) {
+//      if ((inp->dhcp != NULL) && (inp->dhcp->pcb != NULL)) {
+//        /* accept the packe if 
+//           (- broadcast or directed to us) -> DHCP is link-layer-addressed, local ip is always ANY!
+//           - inp->dhcp->pcb->remote == ANY or iphdr->src */
+//        if ((ip_addr_isany(&inp->dhcp->pcb->remote_ip) ||
+//           ip_addr_cmp(&(inp->dhcp->pcb->remote_ip), &current_iphdr_src))) {
+//          pcb = inp->dhcp->pcb;
+//        }
+//      }
+//    }
+//  } 
+//	else
+//#endif /* LWIP_DHCP */
   {
     prev = NULL;
     local_match = 0;
@@ -226,7 +255,13 @@ udp_input(struct pbuf *p, struct netif *inp)
      * 'Perfect match' pcbs (connected to the remote port & ip address) are
      * preferred. If no perfect match is found, the first unconnected pcb that
      * matches the local port and ip address gets the datagram. */
-    for (pcb = udp_pcbs; pcb != NULL; pcb = pcb->next) {
+//遍历UDP PCB链表，
+//将PCB本地addr+端口与UDP目的addr+端口进行比较（记录第一个完美匹配且未连接的PCB），
+//若完美匹配，将PCB远程addr+端口与UDP源addr+端口进行比较（第一个完美匹配的PCB移动到UDP PCB链表前端，下次发现快），
+//如果没有完美匹配，第一个完美匹配且未连接的PCB获取数据包，
+
+    for (pcb = udp_pcbs; pcb != NULL; pcb = pcb->next) 
+		{
       local_match = 0;
       /* print the PCB local and remote address */
       LWIP_DEBUGF(UDP_DEBUG,
@@ -236,9 +271,9 @@ udp_input(struct pbuf *p, struct netif *inp)
                    ip4_addr3_16(&pcb->local_ip), ip4_addr4_16(&pcb->local_ip), pcb->local_port,
                    ip4_addr1_16(&pcb->remote_ip), ip4_addr2_16(&pcb->remote_ip),
                    ip4_addr3_16(&pcb->remote_ip), ip4_addr4_16(&pcb->remote_ip), pcb->remote_port));
-
       /* compare PCB local addr+port to UDP destination addr+port */
-      if (pcb->local_port == dest) {
+      if (pcb->local_port == dest)
+				{
         if (
            (!broadcast && ip_addr_isany(&pcb->local_ip)) ||
            ip_addr_cmp(&(pcb->local_ip), &current_iphdr_dest) ||
@@ -266,7 +301,8 @@ udp_input(struct pbuf *p, struct netif *inp)
       if ((local_match != 0) &&
           (pcb->remote_port == src) &&
           (ip_addr_isany(&pcb->remote_ip) ||
-           ip_addr_cmp(&(pcb->remote_ip), &current_iphdr_src))) {
+           ip_addr_cmp(&(pcb->remote_ip), &current_iphdr_src)))
+			{
         /* the first fully matching PCB */
         if (prev != NULL) {
           /* move the pcb to the front of udp_pcbs so that is
@@ -282,13 +318,15 @@ udp_input(struct pbuf *p, struct netif *inp)
       prev = pcb;
     }
     /* no fully matching pcb found? then look for an unconnected pcb */
-    if (pcb == NULL) {
+    if (pcb == NULL) 
+			{
       pcb = uncon_pcb;
     }
   }
-
+//如果这是匹配的，或者它是指向我们的，做UDP校验和
   /* Check checksum if this is a match or if it was directed at us. */
-  if (pcb != NULL || ip_addr_cmp(&inp->ip_addr, &current_iphdr_dest)) {
+  if (pcb != NULL || ip_addr_cmp(&inp->ip_addr, &current_iphdr_dest)) 
+		{
     LWIP_DEBUGF(UDP_DEBUG | LWIP_DBG_TRACE, ("udp_input: calculating checksum\n"));
 #if LWIP_UDPLITE
     if (IPH_PROTO(iphdr) == IP_PROTO_UDPLITE) {
@@ -321,7 +359,8 @@ udp_input(struct pbuf *p, struct netif *inp)
         goto end;
       }
 #endif /* CHECKSUM_CHECK_UDP */
-    } else
+    } 
+		else
 #endif /* LWIP_UDPLITE */
     {
 #if CHECKSUM_CHECK_UDP
@@ -398,22 +437,28 @@ udp_input(struct pbuf *p, struct netif *inp)
       }
 #endif /* SO_REUSE && SO_REUSE_RXTOALL */
       /* callback */
-      if (pcb->recv != NULL) {
+      if (pcb->recv != NULL) 
+				{
         /* now the recv function is responsible for freeing p */
         pcb->recv(pcb->recv_arg, pcb, p, ip_current_src_addr(), src);
-      } else {
+        } 
+				else 
+			  {
         /* no recv function registered? then we have to free the pbuf! */
         pbuf_free(p);
         goto end;
-      }
-    } else {
+        }
+    } 
+		else {
       LWIP_DEBUGF(UDP_DEBUG | LWIP_DBG_TRACE, ("udp_input: not for us.\n"));
 
-#if LWIP_ICMP
+#if LWIP_ICMP     //1
+			//没有找到匹配，发送ICMP目标端口不可到达，除非目的地址是广播/多播。
       /* No match was found, send ICMP destination port unreachable unless
          destination address was broadcast/multicast. */
       if (!broadcast &&
-          !ip_addr_ismulticast(&current_iphdr_dest)) {
+          !ip_addr_ismulticast(&current_iphdr_dest)) 
+			{
         /* move payload pointer back to ip header */
         pbuf_header(p, (IPH_HL(iphdr) * 4) + UDP_HLEN);
         LWIP_ASSERT("p->payload == iphdr", (p->payload == iphdr));

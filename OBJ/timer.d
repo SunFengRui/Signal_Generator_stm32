@@ -3,7 +3,7 @@
 ..\obj\timer.o: ..\SYSTEM\sys\sys.h
 ..\obj\timer.o: ..\USER\stm32f4xx.h
 ..\obj\timer.o: ..\CORE\core_cm4.h
-..\obj\timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\timer.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\timer.o: ..\CORE\core_cmInstr.h
 ..\obj\timer.o: ..\CORE\core_cmFunc.h
 ..\obj\timer.o: ..\CORE\core_cm4_simd.h
@@ -49,7 +49,7 @@
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\timer.o: ..\LWIP\arch/cc.h
 ..\obj\timer.o: ..\LWIP\arch/cpu.h
-..\obj\timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\timer.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\lwip/err.h
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\lwip/udp.h
@@ -61,6 +61,4 @@
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\lwip/mem.h
 ..\obj\timer.o: ..\LWIP\lwip-1.4.1\src\include\ipv4\lwip/icmp.h
 ..\obj\timer.o: ..\HARDWARE\ETHERNET\socket.h
-..\obj\timer.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
-..\obj\timer.o: ..\HARDWARE\ETHERNET\W5500/w5500.h
-..\obj\timer.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
+..\obj\timer.o: ..\SYSTEM\W5300\processw5300.h

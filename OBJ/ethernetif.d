@@ -7,7 +7,7 @@
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\ethernetif.o: ..\LWIP\arch/cc.h
 ..\obj\ethernetif.o: ..\LWIP\arch/cpu.h
-..\obj\ethernetif.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\ethernetif.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\lwip/netif.h
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\ipv4\lwip/ip_addr.h
@@ -17,7 +17,7 @@
 ..\obj\ethernetif.o: ..\SYSTEM\sys\sys.h
 ..\obj\ethernetif.o: ..\USER\stm32f4xx.h
 ..\obj\ethernetif.o: ..\CORE\core_cm4.h
-..\obj\ethernetif.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\ethernetif.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\ethernetif.o: ..\CORE\core_cmInstr.h
 ..\obj\ethernetif.o: ..\CORE\core_cmFunc.h
 ..\obj\ethernetif.o: ..\CORE\core_cm4_simd.h
@@ -55,4 +55,4 @@
 ..\obj\ethernetif.o: ..\LWIP\lwip_app\lwip_comm\lwip_comm.h
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\netif/etharp.h
 ..\obj\ethernetif.o: ..\LWIP\lwip-1.4.1\src\include\ipv4\lwip/ip.h
-..\obj\ethernetif.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\ethernetif.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

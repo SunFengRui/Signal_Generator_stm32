@@ -3,7 +3,7 @@
 ..\obj\sys_arch.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\sys_arch.o: ..\LWIP\arch/cc.h
 ..\obj\sys_arch.o: ..\LWIP\arch/cpu.h
-..\obj\sys_arch.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\sys_arch.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\sys_arch.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\sys_arch.o: ..\LWIP\lwip_app\lwip_comm\lwipopts.h
 ..\obj\sys_arch.o: ..\LWIP\lwip-1.4.1\src\include\lwip/debug.h
@@ -14,7 +14,7 @@
 ..\obj\sys_arch.o: ..\SYSTEM\sys\sys.h
 ..\obj\sys_arch.o: ..\USER\stm32f4xx.h
 ..\obj\sys_arch.o: ..\CORE\core_cm4.h
-..\obj\sys_arch.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\sys_arch.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\sys_arch.o: ..\CORE\core_cmInstr.h
 ..\obj\sys_arch.o: ..\CORE\core_cmFunc.h
 ..\obj\sys_arch.o: ..\CORE\core_cm4_simd.h

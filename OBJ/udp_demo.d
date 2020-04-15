@@ -3,7 +3,7 @@
 ..\obj\udp_demo.o: ..\SYSTEM\sys\sys.h
 ..\obj\udp_demo.o: ..\USER\stm32f4xx.h
 ..\obj\udp_demo.o: ..\CORE\core_cm4.h
-..\obj\udp_demo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\udp_demo.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\udp_demo.o: ..\CORE\core_cmInstr.h
 ..\obj\udp_demo.o: ..\CORE\core_cmFunc.h
 ..\obj\udp_demo.o: ..\CORE\core_cm4_simd.h
@@ -47,7 +47,7 @@
 ..\obj\udp_demo.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\udp_demo.o: ..\LWIP\arch/cc.h
 ..\obj\udp_demo.o: ..\LWIP\arch/cpu.h
-..\obj\udp_demo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\udp_demo.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\udp_demo.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\udp_demo.o: ..\LWIP\lwip-1.4.1\src\include\lwip/err.h
 ..\obj\udp_demo.o: ..\LWIP\lwip-1.4.1\src\include\lwip/udp.h
@@ -61,12 +61,7 @@
 ..\obj\udp_demo.o: ..\SYSTEM\delay\delay.h
 ..\obj\udp_demo.o: ..\SYSTEM\usart\usart.h
 ..\obj\udp_demo.o: ..\HARDWARE\LED\led.h
-..\obj\udp_demo.o: ..\HARDWARE\KEY\key.h
 ..\obj\udp_demo.o: ..\MALLOC\malloc.h
-..\obj\udp_demo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-..\obj\udp_demo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-..\obj\udp_demo.o: ..\HARDWARE\ETHERNET\spi.h
-..\obj\udp_demo.o: ..\HARDWARE\ETHERNET\socket.h
-..\obj\udp_demo.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
-..\obj\udp_demo.o: ..\HARDWARE\ETHERNET\W5500/w5500.h
-..\obj\udp_demo.o: ..\HARDWARE\ETHERNET\wizchip_conf.h
+..\obj\udp_demo.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\udp_demo.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\obj\udp_demo.o: ..\SYSTEM\W5300\processw5300.h

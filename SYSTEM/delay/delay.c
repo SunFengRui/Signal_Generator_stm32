@@ -105,8 +105,8 @@ void delay_init(u8 SYSCLK)
 #if SYSTEM_SUPPORT_UCOS	//如果需要支持OS.
 	u32 reload;
 #endif  
- 	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);
-	fac_us=SYSCLK/8;						//为系统时钟的1/8   
+ 	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);   //21M
+	fac_us=SYSCLK/8;	//21					//为系统时钟的1/8   
 #if SYSTEM_SUPPORT_UCOS 					//如果需要支持OS.
 	reload=SYSCLK/8;						//每秒钟的计数次数 单位为K	   
 	reload*=1000000/delay_tickspersec;		//根据OS_TICKS_PER_SEC设定溢出时间
@@ -116,7 +116,7 @@ void delay_init(u8 SYSCLK)
 	SysTick->LOAD=reload; 					//每1/OS_TICKS_PER_SEC秒中断一次	
 	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk; //开启SYSTICK
 #else
-	fac_ms=(u16)fac_us*1000;//非ucos下,代表每个ms需要的systick时钟数   
+	fac_ms=(u16)fac_us*1000;  //21000       //非ucos下,代表每个ms需要的systick时钟数   
 #endif //SYSTEM_SUPPORT_UCOS
 }								    
 
@@ -215,6 +215,19 @@ void delay_ms(u16 nms)
 	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //关闭计数器
 	SysTick->VAL =0X00;       //清空计数器
 }
+void Time_Test_Start()
+{		   	  
+	SysTick->LOAD=21; //时间加载	  		 
+	SysTick->VAL=0x00;        //清空计数器
+	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;          //开始倒数  
+}
+void Time_Test_Over()
+{			  
+	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;       //关闭计数器
+	SysTick->VAL =0X00;       //清空计数器	 
+}
+
+
 #endif
 			 
 

@@ -50,6 +50,7 @@
 //
 //*****************************************************************************
 #include "socket.h"
+#include "led.h"
 
 #define SOCK_ANY_PORT_NUM  0xC000;
 static uint16_t sock_any_port = SOCK_ANY_PORT_NUM;
@@ -58,9 +59,7 @@ static uint16_t sock_is_sending = 0;
 static uint16_t sock_remained_size[_WIZCHIP_SOCK_NUM_] = {0,0,};
 static uint8_t  sock_pack_info[_WIZCHIP_SOCK_NUM_] = {0,};
 
-#if _WIZCHIP_ == 5200
-   static uint16_t sock_next_rd[_WIZCHIP_SOCK_NUM_] ={0,};
-#endif
+
 
 #define CHECK_SOCKNUM()   \
    do{                    \
@@ -82,57 +81,11 @@ static uint8_t  sock_pack_info[_WIZCHIP_SOCK_NUM_] = {0,};
       if(len == 0) return SOCKERR_DATALEN;   \
    }while(0);              \
 
-
-int PPP=0;
 	 int Q;
 int8_t socket(uint8_t sn, uint8_t protocol, uint16_t port, uint8_t flag)
 {
 	CHECK_SOCKNUM();
-	PPP=1;
-	switch(protocol)
-	{
-      case Sn_MR_TCP :
-      case Sn_MR_UDP :
-      case Sn_MR_MACRAW :
-         break;
-   #if ( _WIZCHIP_ < 5200 )
-      case Sn_MR_IPRAW :
-      case Sn_MR_PPPoE :
-         break;
-   #endif
-      default :
-         return SOCKERR_SOCKMODE;
-	}
-	PPP=2;
-	if((flag & 0x06) != 0) return SOCKERR_SOCKFLAG;
-#if _WIZCHIP_ == 5200
-   if(flag & 0x10) return SOCKERR_SOCKFLAG;
-#endif
 	   
-	if(flag != 0)
-	{
-   	switch(protocol)
-   	{
-   	   case Sn_MR_TCP:
-   	      if((flag & (SF_TCP_NODELAY|SF_IO_NONBLOCK))==0) return SOCKERR_SOCKFLAG;
-   	      break;
-   	   case Sn_MR_UDP:
-   	      if(flag & SF_IGMP_VER2)
-   	      {
-   	         if((flag & SF_MULTI_ENABLE)==0) return SOCKERR_SOCKFLAG;
-   	      }
-   	      #if _WIZCHIP_ == 5500
-      	      if(flag & SF_UNI_BLOCK)
-      	      {
-      	         if((flag & SF_MULTI_ENABLE) == 0) return SOCKERR_SOCKFLAG;
-      	      }
-   	      #endif
-   	      break;
-   	   default:
-   	      break;
-   	}
-   }
-	PPP=3;
 	close(sn);
 	setSn_MR(sn, (protocol | (flag & 0xF0)));
 	if(!port)
@@ -142,17 +95,16 @@ int8_t socket(uint8_t sn, uint8_t protocol, uint16_t port, uint8_t flag)
 	}
    setSn_PORT(sn,port);	
    setSn_CR(sn,Sn_CR_OPEN);
-	PPP=4;
+
    while(getSn_CR(sn));
-	PPP=5;
+
 	 sock_io_mode |= ((flag & SF_IO_NONBLOCK) << sn);   
    sock_is_sending &= ~(1<<sn);
    sock_remained_size[sn] = 0;
    sock_pack_info[sn] = 0;
-PPP=6;
-	Q=getSn_SR(sn);
+
+	 Q=getSn_SR(sn);
    while(getSn_SR(sn) == SOCK_CLOSED);
-		PPP=7;
    return (int8_t)sn;
 }	   
 
@@ -359,6 +311,7 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
 {
    uint8_t tmp = 0;
    uint16_t freesize = 0;
+	//LED1=1;
    CHECK_SOCKNUM();
    switch(getSn_MR(sn) & 0x0F)
    {
@@ -404,9 +357,7 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
 	setSn_CR(sn,Sn_CR_SEND);
 	/* wait to process the command... */
 	while(getSn_CR(sn));
-   #if _WIZCHIP_ == 5200   // for W5200 ARP errata 
-      setSUBR((uint8_t*)"\x00\x00\x00\x00");
-   #endif
+
    while(1)
    {
       tmp = getSn_IR(sn);
@@ -424,55 +375,58 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
       }
       ////////////
    }
+	 //LED1=0;
 	return len;
 }
 
 
 int R_COUNT;
 int R_FLAG=0;
-int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port)
+int flag1,flag2;
+int length;
+int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port)  //sn=0
 { 
+
    uint8_t  mr;
    uint8_t  head[8];
-	uint16_t pack_len=0;
-   
+	 uint16_t pack_len=0;
+   int ret;
+	
+	//LED1=1;
+	
    CHECK_SOCKNUM();
-   //CHECK_SOCKMODE(Sn_MR_UDP);
-   switch((mr=getSn_MR(sn)) & 0x0F)
-   {
-      case Sn_MR_UDP:
-      case Sn_MR_MACRAW:
-         break;
-   #if ( _WIZCHIP_ < 5200 )         
-      case Sn_MR_IPRAW:
-      case Sn_MR_PPPoE:
-         break;
-   #endif
-      default:
-         return SOCKERR_SOCKMODE;
-   }
+	 getSn_MR(sn);
+
    CHECK_SOCKDATA();
-   if(sock_remained_size[sn] == 0)
-   {
-      while(1)
+	
+    	
+			 while(1)
       {
-         pack_len = getSn_RX_RSR(sn);
-         if(getSn_SR(sn) == SOCK_CLOSED) return SOCKERR_SOCKCLOSED;
-         if( (sock_io_mode & (1<<sn)) && (pack_len == 0) ) return SOCK_BUSY;
-         if(pack_len != 0) break;
+				//
+         pack_len = getSn_RX_RSR(sn);  //读取RX_RSR寄存器判断其是否有接收数据
+//				length=pack_len;
+				//flag1=(getSn_SR(sn) == SOCK_CLOSED);   //getSn_SR() 获取socket0状态
+         if(getSn_SR(sn) == SOCK_CLOSED) 
+				 {
+					 ret = socket(SOCK_UDPS,Sn_MR_UDP,W5500_PORT,0);//打开socket0的一个端口    第二参数代表UDP 5000为端口号
+				}
+				//flag2=(sock_io_mode ) && (pack_len == 0);
+         if( (sock_io_mode ) && (pack_len == 0) ) 
+					 return SOCK_BUSY;  //0
+         if(pack_len != 0) 
+					 break;
       };
-   }
+     
+			
+			 
    sock_pack_info[sn] = PACK_COMPLETED;
-	switch (mr & 0x07)
-	{
-	   case Sn_MR_UDP :
-	      if(sock_remained_size[sn] == 0)
-	      {
+
    			wiz_recv_data(sn, head, 8);
+//设置socket n 的配置命令，设置完后Sn_CR寄存器自动清零
    			setSn_CR(sn,Sn_CR_RECV);
    			while(getSn_CR(sn));
    			// read peer's IP address, port number & packet length
-    			addr[0] = head[0];
+    		addr[0] = head[0];
    			addr[1] = head[1];
    			addr[2] = head[2];
    			addr[3] = head[3];
@@ -481,62 +435,12 @@ int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16
    			sock_remained_size[sn] = head[6];
    			sock_remained_size[sn] = (sock_remained_size[sn] << 8) + head[7];
    			sock_pack_info[sn] = PACK_FIRST;
-   	   }
+
 			if(len < sock_remained_size[sn]) pack_len = len;
 			else pack_len = sock_remained_size[sn];
-			//
-			// Need to packet length check (default 1472)
-			//
+
    		wiz_recv_data(sn, buf, pack_len); // data copy.
-			break;
-	   case Sn_MR_MACRAW :
-	      if(sock_remained_size[sn] == 0)
-	      {
-   			wiz_recv_data(sn, head, 2);
-   			setSn_CR(sn,Sn_CR_RECV);
-   			while(getSn_CR(sn));
-   			// read peer's IP address, port number & packet length
-    			sock_remained_size[sn] = head[0];
-   			sock_remained_size[sn] = (sock_remained_size[sn] <<8) + head[1];
-   			if(sock_remained_size[sn] > 1514) 
-   			{
-   			   close(sn);
-   			   return SOCKFATAL_PACKLEN;
-   			}
-   			sock_pack_info[sn] = PACK_FIRST;
-   	   }
-			if(len < sock_remained_size[sn]) pack_len = len;
-			else pack_len = sock_remained_size[sn];
-			wiz_recv_data(sn,buf,pack_len);
-		   break;
-   #if ( _WIZCHIP_ < 5200 )
-		case Sn_MR_IPRAW:
-		   if(sock_remained_size[sn] == 0)
-		   {
-   			wiz_recv_data(sn, head, 6);
-   			setSn_CR(sn,Sn_CR_RECV);
-   			while(getSn_CR(sn));
-   			addr[0] = head[0];
-   			addr[1] = head[1];
-   			addr[2] = head[2];
-   			addr[3] = head[3];
-   			sock_remained_size[sn] = head[4];
-   			sock_remaiend_size[sn] = (sock_remained_size[sn] << 8) + head[5];
-   			sock_pack_info[sn] = PACK_FIRST;
-         }
-			//
-			// Need to packet length check
-			//
-			if(len < sock_remained_size[sn]) pack_len = len;
-			else pack_len = sock_remained_size[sn];
-   		wiz_recv_data(sn, buf, pack_len); // data copy.
-			break;
-   #endif
-      default:
-         wiz_recv_ignore(sn, pack_len); // data copy.
-         sock_remained_size[sn] = pack_len;
-         break;
-   }
+
 	setSn_CR(sn,Sn_CR_RECV);
 	/* wait to process the command... */
 	while(getSn_CR(sn)) ;
@@ -546,9 +450,11 @@ int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16
 	if(sock_remained_size[sn] != 0) sock_pack_info[sn] |= PACK_REMAINED;
    //
 	 R_COUNT++;
-	 if(R_COUNT>=150)
+	 if(R_COUNT>=PondBuffer)
 		R_COUNT=0; 
 	  R_FLAG=1;
+	 
+	// LED1=0;
  	return pack_len;
 }
 

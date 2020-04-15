@@ -19,45 +19,31 @@ void LED_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF,ENABLE); //使能GPIOD的时钟
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA|RCC_AHB1Periph_GPIOF|RCC_AHB1Periph_GPIOE,ENABLE); //使能GPIOD的时钟
 	
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_9|GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_OUT;//输出
 	GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;  //推挽输出
 	GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL;  //上拉
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_100MHz; //高速GPIO
 	GPIO_Init(GPIOF,&GPIO_InitStructure);
 	
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4; //PD0,1,8,9,10,14,15
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; //复用模式
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; //100M时钟
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;  //推完模式
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //上拉
+	GPIO_Init(GPIOA,&GPIO_InitStructure); 
+  GPIO_SetBits(GPIOA, GPIO_Pin_4);	
+	
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_OUT;//输出
 	GPIO_InitStructure.GPIO_OType=GPIO_OType_PP;  //推挽输出
 	GPIO_InitStructure.GPIO_PuPd=GPIO_PuPd_NOPULL;  //上拉
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_100MHz; //高速GPIO
-	GPIO_Init(GPIOF,&GPIO_InitStructure);
+	GPIO_Init(GPIOE,&GPIO_InitStructure);
 	
+	GPIO_ResetBits(GPIOE,GPIO_Pin_0);
 	GPIO_SetBits(GPIOF,GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_1); //GPIOF9,10高电平
 }
-
-//void Set_Led(u8 LED,u8 state)
-//{
-//	if(LED==0)
-//	{
-//		switch(state)
-//		{
-//			case 0: LED0=1;
-//							break;
-//			case 1: LED0=0;
-//							break;
-//		}
-//	}else if(LED==1)
-//	{
-//		switch(state)
-//		{
-//			case 0: LED1=1;
-//							break;
-//			case 1: LED1=0;
-//							break;
-//		}
-//	}
-//}
 

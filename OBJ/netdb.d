@@ -6,5 +6,5 @@
 ..\obj\netdb.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\netdb.o: ..\LWIP\arch/cc.h
 ..\obj\netdb.o: ..\LWIP\arch/cpu.h
-..\obj\netdb.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\netdb.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\netdb.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h

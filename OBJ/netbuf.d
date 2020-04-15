@@ -5,5 +5,5 @@
 ..\obj\netbuf.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\netbuf.o: ..\LWIP\arch/cc.h
 ..\obj\netbuf.o: ..\LWIP\arch/cpu.h
-..\obj\netbuf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\netbuf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\netbuf.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h

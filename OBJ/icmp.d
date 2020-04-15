@@ -5,7 +5,7 @@
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/arch.h
 ..\obj\icmp.o: ..\LWIP\arch/cc.h
 ..\obj\icmp.o: ..\LWIP\arch/cpu.h
-..\obj\icmp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\obj\icmp.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/opt.h
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\ipv4\lwip/icmp.h
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/pbuf.h
@@ -20,4 +20,4 @@
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/memp.h
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/memp_std.h
 ..\obj\icmp.o: ..\LWIP\lwip-1.4.1\src\include\lwip/snmp.h
-..\obj\icmp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\icmp.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
